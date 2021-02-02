@@ -4,6 +4,8 @@ import org.fundacionjala.app.quizz.console.QuizUIHandler;
 import org.fundacionjala.app.quizz.model.Quiz;
 import org.fundacionjala.app.quizz.model.QuizAnswers;
 import org.fundacionjala.app.quizz.console.util.InputReader;
+import org.fundacionjala.app.quizz.persistence.IncorrectPathException;
+import org.fundacionjala.app.quizz.persistence.QuizPersistence;
 
 public class Menu {
 
@@ -22,6 +24,8 @@ public class Menu {
         switch (option) {
             case '1':
                 quiz = QuizUIHandler.createQuiz();
+              
+                
                 break;
             case '2':
                 fillQuiz();
@@ -30,6 +34,9 @@ public class Menu {
                 showQuiz();
                 break;
             case '4':
+               quiz = QuizUIHandler.loadQuizFromJson();
+                break;
+            case '5':
                 shouldExit = true;
                 break;
             default:
@@ -52,7 +59,11 @@ public class Menu {
 
     private void fillQuiz() {
         if (quiz == null) {
-            System.out.println("No quiz available, you must create first a quiz");
+            try {
+                quiz = QuizPersistence.GetQuiz();
+            } catch (IncorrectPathException ex) {
+                System.out.println("No quiz available, you must create first a quiz");
+            }
             return;
         }
 
@@ -65,7 +76,8 @@ public class Menu {
         System.out.println("1. Create quiz");
         System.out.println("2. Fill quiz");
         System.out.println("3. Show quiz");
-        System.out.println("4. Exit");
+        System.out.println("4. load quiz from Json");
+        System.out.println("5. Exit");
         System.out.println("======================================");
     }
 }
